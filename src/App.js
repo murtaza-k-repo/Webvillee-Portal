@@ -17,7 +17,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login signin={signin} />}></Route>
+        <Route path="/" element={<Login isSignedIn={isSignedIn} signin={signin} />}></Route>
         <Route
           path="/home"
           element={

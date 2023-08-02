@@ -6,7 +6,7 @@ import greytHRLogo from "../../assests/img/greytip_logo.svg";
 import { Link } from 'react-router-dom';
 import Footer from '../Footer';
 
-const Home = () => {
+const Home = (props) => {
   return (
     <>
     <Navbar className="bg-body-tertiary">
@@ -21,7 +21,7 @@ const Home = () => {
             />{' '}
             &nbsp; Webvillee Portal
           </Navbar.Brand>
-          <div><Link to={"/"} className='text-decoration-none text-black'>Logout</Link></div>
+          <div><Link to={"/"} onClick={props.signout} className='text-decoration-none text-black'>Logout</Link></div>
         </Container>
       </Navbar>
     <div className='container center-div'>

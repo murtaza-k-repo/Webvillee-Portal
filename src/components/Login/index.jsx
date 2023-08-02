@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from "../../assests/img/WebvilleeLogo.png";
 import GoogleButton from "react-google-button";
 import { TypeAnimation } from "react-type-animation";
@@ -7,6 +7,14 @@ import { useNavigate } from 'react-router';
 const Login = (props) => {
 
   const navigate = useNavigate();
+
+  useEffect(()=> {
+    if(props.isSignedIn){
+      navigate("/home");
+    }
+
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="App center-div">
