@@ -1,20 +1,58 @@
 import React, { useEffect } from 'react';
-import logo from "../../assests/img/WebvilleeLogo.png";
+import logo from "../../assets/img/WebvilleeLogo.png";
 import GoogleButton from "react-google-button";
 import { TypeAnimation } from "react-type-animation";
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import {  useGoogleLogin } from '@react-oauth/google';
+import { useState } from 'react';
 
 const Login = (props) => {
 
+  const [ user, setUser ] = useState(null);
+  const [ profile, setProfile ] = useState(null);
+
   const navigate = useNavigate();
 
-  useEffect(()=> {
-    if(props.isSignedIn){
-      navigate("/home");
+  const login = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error)
+    });
+
+    useEffect(
+        () => {
+            if (user) {
+                axios
+                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                        headers: {
+                            Authorization: `Bearer ${user.access_token}`,
+                            Accept: 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        setProfile(res.data);
+                    })
+                    .catch((err) => console.log(err));
+            }
+        },
+        [ user ]
+    );
+
+  useEffect(() => {
+
+    if(user && profile){
+      console.log(profile.email);
+
+      localStorage.setItem('user', profile.email);
+
+      navigate("/", {replace: true});
+      
     }
 
+
     //eslint-disable-next-line
-  }, []);
+  }, [ user, profile ]);
+
 
   return (
     <div className="App center-div">
@@ -52,10 +90,7 @@ const Login = (props) => {
 
           <div className="col-8">
             <GoogleButton
-              onClick={() => {
-                props.signin();
-                navigate("/home");
-              }}
+              onClick={login}
               className="google-button"
               style={{ margin: "auto", borderRadius: "15px" }}
               type="light"

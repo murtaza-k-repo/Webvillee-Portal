@@ -1,0 +1,22 @@
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.addBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F1A661 !important;
+    border:none !important;
+    font-weight: 600 !important;
+}
+
+.addBtn:hover, .addBtn:active, .addBtn:focus{
+    background-color: #F1A661 !important;
+}
+
+.spinner-border{
+    color: #F1A661;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+}

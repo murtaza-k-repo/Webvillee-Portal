@@ -1,33 +1,32 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
-import { useState } from "react";
 import Protected from "./components/Protected";
 import Home from "./components/Home";
+import Department from "./components/Department";
+import Roles from "./components/Roles";
+import Users from "./components/Users";
+import Root from "./components";
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(null);
-  const signin = () => {
-    setIsSignedIn(true);
-  };
-  const signout = () => {
-    setIsSignedIn(false);
-  };
-
   return (
-    <Router>
+    <Router basename="portal">
       <Routes>
-        <Route path="/" element={<Login isSignedIn={isSignedIn} signin={signin} />}></Route>
+        <Route path="/login" element={<Login />}></Route>
         <Route
-          path="/home"
+          path="/"
           element={
-            <Protected isSignedIn={isSignedIn}>
-              <Home signout={signout} />
+            <Protected>
+              <Root />
             </Protected>
           }
-        ></Route>
+        >
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/department" element={<Department />}></Route>
+          <Route path="/roles" element={<Roles />}></Route>
+          <Route path="/users" element={<Users />}></Route>
+        </Route>
       </Routes>
-      
     </Router>
   );
 }

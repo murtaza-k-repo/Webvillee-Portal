@@ -1,9 +1,12 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom';
 
-function Protected({ isSignedIn, children }) {
-  if (!isSignedIn) {
-    return <Navigate to="/" replace />
+function Protected({ children }) {
+
+  let user = localStorage.getItem('user');
+
+  if (!user) {
+    return <Navigate to="/login" replace />
   }
   return children;
 }

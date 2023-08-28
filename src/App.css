@@ -1,5 +1,5 @@
 body{
-    background-image: url("./assests/img/background.png");
+    background-image: url("./assets/img/background.png");
     background-size: cover; /* Resize the background image to cover the entire container */
 }
 
