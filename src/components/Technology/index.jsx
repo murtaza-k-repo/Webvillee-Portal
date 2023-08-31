@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import MUIDataTable from 'mui-datatables'
+import React from 'react'
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { BiPlus, BiSolidPencil } from 'react-icons/bi'
+import { MdDelete } from 'react-icons/md';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-import { BiPlus, BiSolidPencil } from "react-icons/bi";
-import { MdDelete } from "react-icons/md";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
-import "./style.css";
-import axios from "axios";
-import MUIDataTable from "mui-datatables";
+const Technology = () => {
 
-
-
-const Department = () => {
   const [rows, setRows] = useState(null);
   const [show, setShow] = useState(false);
+  const [departments, setDepartments] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [updateData, setUpdateData] = useState({id: "", department_name:""});
+  const [updateData, setUpdateData] = useState({id: "", technology_name:"", department_id: ""});
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteID] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
-
 
   const columns = [
     {
@@ -32,6 +31,14 @@ const Department = () => {
         sort: true,
       },
     },
+    {
+        name: "technology",
+        label: "Technology",
+        options: {
+          filter: true,
+          sort: true,
+        },
+      },
     {
       name: "department",
       label: "Department",
@@ -52,22 +59,49 @@ const Department = () => {
 
   const getAllDepartments = async () => {
     try {
-
       const response = await axios.get(
         `${process.env.REACT_APP_API_ENDPOINT}/api/all/getAllDepartments`,
         {
           headers: {
-            Authorization: `Bearer ${user?.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
 
       if (response.status === 200) {
+        setDepartments(response.data.data);
+      } else {
+        toast.error("Something went wrong!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const getTechnology = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/all/getAllTechnologies`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response?.data?.data);
 
         let temp = response?.data?.data?.map((row, index) => ({
-          sno: index+1,
+          sno: index + 1,
+          technology: row?.technology_name,
           department: row?.department_name,
-          actions :(
+          actions: (
             <>
               <Button
                 className="text-success"
@@ -76,7 +110,8 @@ const Department = () => {
                   setShowUpdateModal(true);
                   setUpdateData({
                     id: row?._id,
-                    department_name: row?.department_name
+                    technology_name: row?.technology_name,
+                    department_id: row?.department_id,
                   });
                 }}
               >
@@ -93,34 +128,29 @@ const Department = () => {
                 <MdDelete size={22} />
               </Button>
             </>
-          )
-        }))
+          ),
+        }));
 
         setRows(temp);
-    
       } else {
         toast.error("Something went wrong!", {
-            position: toast.POSITION.TOP_RIGHT
-          });
-     
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     } catch (err) {
-      console.log(err);
       toast.error("Something went wrong!", {
-        position: toast.POSITION.TOP_RIGHT
+        position: toast.POSITION.TOP_RIGHT,
       });
- 
     }
   };
-
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try{
-        let response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/all/createDepartment`, {
-            department_name: event.target[0].value
+        let response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/all/createTechnology`, {
+            technology_name: event.target[0].vale,
+            department_id: event.target[1].value
         },{
             headers: {
                 "Authorization": `Bearer ${user?.token}`
@@ -129,7 +159,7 @@ const Department = () => {
 
         if(response.status === 200){
             setShow(false);
-            getAllDepartments();
+            getTechnology();
             toast.success("Department added successfully!", {
                 position: toast.POSITION.TOP_RIGHT
               });
@@ -149,8 +179,9 @@ const Department = () => {
     event.preventDefault();
     
     try{
-        let response = await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/api/all/updateDepartment/${updateData.id}`, {
-            department_name: updateData.department_name
+        let response = await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/api/all/updateTechnology/${updateData.id}`, {
+            technology_name: updateData?.technology_name,
+            department_id: updateData?.department_id
         },{
             headers: {
                 "Authorization": `Bearer ${user?.token}`
@@ -159,7 +190,7 @@ const Department = () => {
 
         if(response.status === 200){
             setShowUpdateModal(false);
-            getAllDepartments();
+            getTechnology();
             toast.success("Department updated successfully!", {
                 position: toast.POSITION.TOP_RIGHT
               });
@@ -177,6 +208,7 @@ const Department = () => {
 
   useEffect(() => {
     getAllDepartments();
+    getTechnology();
 
     //eslint-disable-next-line
   }, []);
@@ -201,10 +233,9 @@ const Department = () => {
     }
   };
 
-
   return (
     <>
-      <ToastContainer />
+    <ToastContainer />
       <MUIDataTable
         className={"mt-4 mb-3"}
         title={"Roles"}
@@ -228,21 +259,40 @@ const Department = () => {
           ),
         }}
       />
-
+      
       <Modal show={show}>
         <Modal.Header>
-          <Modal.Title>Add Department</Modal.Title>
+          <Modal.Title>Add Technology</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <input
                 type="text"
                 class="form-control"
-                id="department"
-                aria-describedby="department"
-                placeholder="Enter department"
+                id="technology"
+                aria-describedby="technology"
+                placeholder="Enter technology"
               />
+            </div>
+            <div class="form-group">
+              <select
+                class="form-select mb-2"
+                id="exampleFormControlSelect1"
+                required
+              >
+                <option disabled selected>
+                  Select department
+                </option>
+                {departments &&
+                  departments?.map((department) => {
+                    return (
+                      <option value={department._id}>
+                        {department.department_name}
+                      </option>
+                    );
+                  })}
+              </select>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -262,16 +312,42 @@ const Department = () => {
         </Modal.Header>
         <Form onSubmit={handleUpdate}>
           <Modal.Body>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <input
                 type="text"
                 class="form-control"
-                id="department"
-                aria-describedby="department"
-                placeholder="Enter department"
-                onChange={(e) => setUpdateData({...updateData, department_name: e.target.value})}
-                value={updateData.department_name}
+                id="technology"
+                aria-describedby="technology"
+                placeholder="Enter technology"
+                onChange={(e) => setUpdateData({...updateData, technology_name: e.target.value})}
+                value={updateData.technology_name}
               />
+            </div>
+            <div class="form-group">
+              <select
+                class="form-select mb-2"
+                id="exampleFormControlSelect1"
+                required
+                value={updateData.department_id}
+                onChange={(e) =>
+                  setUpdateData({
+                    ...updateData,
+                    department_id: e.target.value,
+                  })
+                }
+              >
+                <option disabled selected value={""}>
+                  Select department
+                </option>
+                {departments &&
+                  departments?.map((department) => {
+                    return (
+                      <option value={department._id}>
+                        {department.department_name}
+                      </option>
+                    );
+                  })}
+              </select>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -302,8 +378,8 @@ const Department = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
-  );
-};
+      </>
+  )
+}
 
-export default Department;
+export default Technology

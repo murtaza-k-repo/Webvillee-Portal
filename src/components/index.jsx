@@ -11,11 +11,11 @@ const Root = (props) => {
       <Navbar {...props}/>
 
       <div className="">
-        <div className="row me-0">
-          <div className="col-12 col-md-3">
+        <div className="row w-100">
+          <div className="col-3">
             <Sidebar />
           </div>
-          <div className="col-12 col-md-9">
+          <div className="col-9">
             <Outlet />
           </div>
         </div>

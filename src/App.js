@@ -7,6 +7,7 @@ import Department from "./components/Department";
 import Roles from "./components/Roles";
 import Users from "./components/Users";
 import Root from "./components";
+import Technology from "./components/Technology";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/department" element={<Department />}></Route>
           <Route path="/roles" element={<Roles />}></Route>
           <Route path="/users" element={<Users />}></Route>
+          <Route path="/technology" element={<Technology />}></Route>
         </Route>
       </Routes>
     </Router>

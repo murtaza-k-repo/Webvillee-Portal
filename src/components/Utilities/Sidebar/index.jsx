@@ -1,45 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import {FiUsers} from "react-icons/fi";
-import {FaUsers} from "react-icons/fa";
-// import {LiaBookSolid} from "react-icons/lia"
+import {FaLaptopCode, FaUsers} from "react-icons/fa";
 
 
 const Sidebar = () => {
+
+  const [active, setActive] = useState(null);
+
+  const location = useLocation();
+
+
+  useEffect(() => {
+    setActive(location.pathname);
+  }, [location]);
+
   return (
-    <div className="container sidebar d-none d-md-block">
+    <div className="container sidebar">
       <ul className="links">
         <Link to="/">
-          <li className="d-flex align-items-center text-center">
-            <RxDashboard size={20} /> &nbsp; <span> Dashboard</span>
+          <li className={`d-flex align-items-center ${active === '/' && 'active'}`}>
+            <RxDashboard size={25} /> &nbsp; <span className="d-none d-md-inline"> Dashboard</span>
           </li>
         </Link>
         <Link to="/department">
-          <li className="d-flex align-items-center text-center">
+          <li className={`d-flex align-items-center ${active === '/department' && 'active'}`}>
             {" "}
-            <HiOutlineBuildingOffice2 size={20} /> &nbsp;{" "}
-            <span> Manage Department</span>
+            <HiOutlineBuildingOffice2 size={25} /> &nbsp;{" "}
+            <span className="d-none d-md-inline">Department</span>
           </li>
         </Link>
         <Link to="/roles">
-          <li className="d-flex align-items-center text-center"><FiUsers size={20} /> &nbsp;{" "}
-            <span>Manage Roles</span></li>
+          <li className={`d-flex align-items-center ${active === '/roles' && 'active'}`}><FiUsers size={25} /> &nbsp;{" "}
+            <span className="d-none d-md-inline">Roles</span></li>
         </Link>
-        {/* <Link to="/courses">
-          <li className="d-flex align-items-center text-center"><LiaBookSolid size={20} /> &nbsp;{" "}
-            <span>Manage Courses</span></li>
-        </Link> */}
+   
         <Link to="/users">
-          <li className="d-flex align-items-center text-center"><FaUsers size={20} />&nbsp;{" "}
-            <span>Manage Users</span></li>
+          <li className={`d-flex align-items-center ${active === '/users' && 'active'}`}><FaUsers size={25} />&nbsp;{" "}
+            <span className="d-none d-md-inline">Users</span></li>
         </Link>
-        {/* <Link to="/settings">
-          <li className="d-flex align-items-center text-center"><FiSettings size={20} />&nbsp;{" "}
-            <span>Settings</span></li>
-        </Link> */}
+        <Link to="/technology">
+          <li className={`d-flex align-items-center ${active === '/technology' && 'active'}`}><FaLaptopCode size={25} />&nbsp;{" "}
+            <span className="d-none d-md-inline">Technology</span></li>
+        </Link>
+
       </ul>
     </div>
   );
