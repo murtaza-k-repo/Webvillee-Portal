@@ -114,7 +114,6 @@ const Department = () => {
   };
 
   
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 

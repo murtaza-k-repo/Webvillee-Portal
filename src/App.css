@@ -29,6 +29,11 @@ body{
     align-items: baseline !important;
 }
 
+.MuiTableFooter-root td {
+    padding: 0 !important;
+    padding-top: 5px !important;
+}
+
 footer{
     display: flex;
     align-items: center;

@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import SearchBar from "material-ui-search-bar";
-
 import { BiPlus, BiSolidPencil } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
-import { FaPlus } from "react-icons/fa";
 import "./style.css";
 import axios from "axios";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MUIDataTable from "mui-datatables";
-import { selectClasses } from "@mui/material";
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
 
 const Roles = () => {
   const [rows, setRows] = useState(null);
@@ -99,7 +81,6 @@ const Roles = () => {
       );
 
       if (response.status === 200) {
-        console.log(response?.data?.data);
 
         let temp = response?.data?.data?.map((row, index) => ({
           sno: index + 1,
@@ -362,7 +343,7 @@ const Roles = () => {
 
       <Modal show={showUpdateModal}>
         <Modal.Header>
-          <Modal.Title>Update Department</Modal.Title>
+          <Modal.Title>Update Role</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleUpdate}>
           <Modal.Body>

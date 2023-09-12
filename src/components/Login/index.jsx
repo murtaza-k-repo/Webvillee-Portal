@@ -68,7 +68,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (user && profile) {
-      console.log(profile.email);
+      console.log(profile);
 
       getAuthToken(profile.email);
     }

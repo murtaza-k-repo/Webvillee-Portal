@@ -149,7 +149,7 @@ const Technology = () => {
 
     try{
         let response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/all/createTechnology`, {
-            technology_name: event.target[0].vale,
+            technology_name: event.target[0].value,
             department_id: event.target[1].value
         },{
             headers: {
@@ -308,7 +308,7 @@ const Technology = () => {
 
       <Modal show={showUpdateModal}>
         <Modal.Header>
-          <Modal.Title>Update Department</Modal.Title>
+          <Modal.Title>Update Technology</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleUpdate}>
           <Modal.Body>
